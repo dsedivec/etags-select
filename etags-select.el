@@ -233,9 +233,16 @@ to do."
   (interactive)
   (setq etags-select-source-buffer (buffer-name))
   (let* ((default (find-tag-default))
-         (tagname (completing-read
+         (tagname (ido-completing-read
                    (format "Find tag (default %s): " default)
-                   'etags-select-complete-tag nil nil nil 'find-tag-history default)))
+                   ;; This is a funny way of spelling "give me all
+                   ;; possible completions."  It is a transformation
+                   ;; of the code that used to be here (for
+                   ;; completing-read, where this argument can be a
+                   ;; function that will be called to get possible
+                   ;; completions).
+                   (etags-select-complete-tag "" nil t)
+                   nil nil nil 'find-tag-history default)))
     (etags-select-find tagname)))
 
 (defun etags-select-complete-tag (string predicate what)
