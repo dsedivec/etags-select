@@ -420,7 +420,9 @@ Use the C-u prefix to prevent the etags-select window from closing."
   "Quit etags-select buffer."
   (interactive)
   (kill-buffer nil)
-  (delete-window))
+  (delete-window)
+  (when etags-select-opened-window
+    (select-window etags-select-opened-window)))
 
 (defun etags-select-by-tag-number (first-digit)
   "Select a tag by number."
