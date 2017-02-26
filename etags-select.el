@@ -226,16 +226,24 @@ to do."
   (etags-select-find (find-tag-default)))
 
 ;;;###autoload
-(defun etags-select-find-tag ()
+(defun etags-select-find-tag (&optional always-prompt)
   "Do a find-tag, and display all exact matches.  If only one match is
 found, see the `etags-select-no-select-for-one-match' variable to decide what
 to do."
-  (interactive)
+  (interactive "P")
   (setq etags-select-source-buffer (buffer-name))
   (let* ((default (find-tag-default))
-         (tagname (completing-read
-                   (format "Find tag (default %s): " default)
-                   'etags-select-complete-tag nil nil nil 'find-tag-history default)))
+         (tagname (progn
+                    (if (and (not always-prompt)
+                             (progn
+                               (etags-select-build-completion-table)
+                               (member default
+                                       (etags-select-get-completion-table))))
+                        default
+                      (completing-read
+                       (format "Find tag (default %s): " default)
+                       'etags-select-complete-tag nil nil nil 'find-tag-history
+                       default)))))
     (etags-select-find tagname)))
 
 (defun etags-select-complete-tag (string predicate what)
