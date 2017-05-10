@@ -270,7 +270,9 @@ to do."
   "Get the tag completion table."
   (if etags-select-use-xemacs-etags-p
       tag-completion-table
-    (tags-completion-table)))
+    (save-excursion
+      (visit-tags-table-buffer)
+      (tags-completion-table))))
 
 (defun etags-select-tags-completion-table-function ()
   "Short tag name completion."
